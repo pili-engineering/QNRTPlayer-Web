@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { QNRTPlayer } from "qn-rtplayer-web";
 
+QNRTPlayer.setLogLevel("log");
 const player = new QNRTPlayer();
 
 // -1: unknow, 0: false, 1: true
@@ -53,7 +54,7 @@ type VolumnType = 0 | 0.3 | 0.6 | 1;
 type MeidaContainerType = "media-container-1" | "media-container-2";
 
 function StreamContainer() {
-  const [url, setUrl] = React.useState("webrtc://10.200.20.28:1998/sdk-live/timestamp");
+  const [url, setUrl] = React.useState("http://pili-hls.qnsdk.com/sdk-live/timestamp.m3u8");
   const [width, setWidth] = React.useState<string>("100%");
   const [height, setHeight] = React.useState<string>("100%");
   const [className, setClassName] = React.useState<string>("qn-rtplayer-media");
@@ -95,7 +96,7 @@ function StreamContainer() {
         <div className="config-item">
           <label htmlFor="config-volumn">volumn: </label>
           <select name="" id="config-volumn" value={volumn} onChange={e => setVolumn(parseFloat(e.target.value) as VolumnType)}>
-            <option value="0.1">0.1</option>
+            <option value="0">0</option>
             <option value="0.3">0.3</option>
             <option value="0.6">0.6</option>
             <option value="1">1</option>
@@ -123,7 +124,14 @@ function StreamContainer() {
         }}>init</button>
         <button className="stream-btn" onClick={() => player.release()}>release</button>
         <button className="stream-btn" onClick={async () => {
-          player.play(url, document.getElementById(mediaContainer) as HTMLElement);
+          try {
+            await player.play(url, document.getElementById(mediaContainer) as HTMLElement);
+          } catch(e) {
+            // 处理播放失败的情况，弹出 UI，用户点击后播放
+            // 这里是利用浏览器 controls 来实现，也可以自己创建 UI，用户点击后执行 player.resume() 方法
+            setControls(true);
+            player.setConfig({controls: true});
+          }
         }}>play</button>
         <button className="stream-btn" onClick={() => player.stop()}>stop</button>
         <button className="stream-btn" onClick={() => player.pause()}>pause</button>
@@ -157,7 +165,7 @@ function LogContainer({ logs }: { logs: any[]; }) {
   return <>
     <div className={`log-container-control ${logState}`} onClick={toggleLog}>LOG</div>
     <div id="log-container" style={{ top: top }}>
-      <div className="log-item">{`sdk version: ${player.version}`}</div>
+      <div className="log-item">{`SDK version: ${player.version}`}</div>
       <div className="log-item">{`browser report: ${JSON.stringify(player.getBrowserReport())}`}</div>
       <div className="log-item">{`player support: ${JSON.stringify(player.getPlayerSupport())}`}</div>
       {logs.map((logItem) => <LogItem key={logItem.id} logItem={logItem} />)}
@@ -183,6 +191,9 @@ function App() {
     });
     player.on("error", (data: any) => {
       alert(`error: code: ${data.code}, errorType: ${data.errorType}, msg: ${data.msg}`);
+    });
+    player.on("playerStateChanged", (data: any) => {
+      // ...
     });
   }, []);
   return <>

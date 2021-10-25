@@ -112,6 +112,10 @@ body {
   border: solid rgba(220, 220, 220, 1) 1px;
 }
 
+.stream-btn:hover {
+  cursor: pointer;
+}
+
 .stream-content-container {
   margin: auto;
   margin-top: 6px;
