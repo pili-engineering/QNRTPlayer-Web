@@ -61,8 +61,18 @@ function StreamContainer() {
   const [controls, setControls] = React.useState<boolean>(false);
   const [playsinline, setPlaysinline] = React.useState<boolean>(true);
   const [objectFit, setObjectFit] = React.useState<ObjectFitType>("contain");
-  const [volumn, setVolumn] = React.useState<VolumnType>(0.6);
+  const [volumn, setVolumn] = React.useState<VolumnType>(0);
   const [mediaContainer, setMediaContainer] = React.useState<MeidaContainerType>("media-container-1");
+
+  React.useEffect(() => {
+    player.init({ width, height, className, controls, playsinline, objectFit, volumn });
+    player.play(url, document.getElementById(mediaContainer) as HTMLElement)
+      .catch((e: any) => {
+        console.log("play fail", e)
+        setControls(true);
+        player.setConfig({ controls: true });
+      });
+  }, [])
 
   return <div id="stream-container">
     <div id="stream-url-container">
@@ -126,11 +136,12 @@ function StreamContainer() {
         <button className="stream-btn" onClick={async () => {
           try {
             await player.play(url, document.getElementById(mediaContainer) as HTMLElement);
-          } catch(e) {
+          } catch (e) {
             // 处理播放失败的情况，弹出 UI，用户点击后播放
             // 这里是利用浏览器 controls 来实现，也可以自己创建 UI，用户点击后执行 player.resume() 方法
+            console.log("play fail", e)
             setControls(true);
-            player.setConfig({controls: true});
+            player.setConfig({ controls: true });
           }
         }}>play</button>
         <button className="stream-btn" onClick={() => player.stop()}>stop</button>
