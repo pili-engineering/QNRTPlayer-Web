@@ -1,17 +1,17 @@
 {
   "name": "demo",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "七牛实时直播播放器 demo",
   "author": "yao <yaoyaox023@gmail.com>",
   "homepage": "",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --mode=development",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider webpack-dev-server --mode=development",
     "build": "webpack --mode=production"
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
-    "qn-rtplayer-web": "^1.0.8",
+    "qn-rtplayer-web": "^1.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
