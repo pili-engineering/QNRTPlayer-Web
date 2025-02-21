@@ -6,7 +6,7 @@
   "homepage": "",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_OPTIONS=--openssl-legacy-provider webpack-dev-server --mode=development",
+    "start": "webpack-dev-server --mode=development",
     "build": "webpack --mode=production"
   },
   "dependencies": {
