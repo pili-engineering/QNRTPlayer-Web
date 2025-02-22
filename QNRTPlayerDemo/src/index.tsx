@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { QNRTPlayer } from "qn-rtplayer-web";
 
-QNRTPlayer.setLogLevel("log");
+QNRTPlayer.setLogLevel("debug");
 const player = new QNRTPlayer();
 
 // -1: unknow, 0: false, 1: true
@@ -54,18 +54,21 @@ type VolumnType = 0 | 0.3 | 0.6 | 1;
 type MeidaContainerType = "media-container-1" | "media-container-2";
 
 function StreamContainer() {
-  const [url, setUrl] = React.useState("http://pili-hls.qnsdk.com/sdk-live/timestamp.m3u8");
+  const storedUrl = localStorage.getItem('temp-url');
+  const [url, setUrl] = React.useState(storedUrl || "https://live-pilidemo.cloudvdn.com/pilidemo/timestamp.m3u8");
   const [width, setWidth] = React.useState<string>("100%");
   const [height, setHeight] = React.useState<string>("100%");
   const [className, setClassName] = React.useState<string>("qn-rtplayer-media");
   const [controls, setControls] = React.useState<boolean>(false);
+  const [audioOnly, setAudioOnly] = React.useState<boolean>(false);
+  const [muted, setMuted] = React.useState<boolean>(false);
   const [playsinline, setPlaysinline] = React.useState<boolean>(true);
   const [objectFit, setObjectFit] = React.useState<ObjectFitType>("contain");
   const [volumn, setVolumn] = React.useState<VolumnType>(0);
   const [mediaContainer, setMediaContainer] = React.useState<MeidaContainerType>("media-container-1");
 
   React.useEffect(() => {
-    player.init({ width, height, className, controls, playsinline, objectFit, volumn });
+    player.init({ width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted });
     player.play(url, document.getElementById(mediaContainer) as HTMLElement)
       .catch((e: any) => {
         console.log("play fail", e)
@@ -127,10 +130,18 @@ function StreamContainer() {
           <label htmlFor="config-playsinline">playsinline: </label>
           <input type="checkbox" name="" id="config-playsinline" checked={playsinline} onChange={e => setPlaysinline(e.target.checked)} />
         </div>
+        <div className="config-item">
+          <label htmlFor="config-audioOnly">audioOnly: </label>
+          <input type="checkbox" name="" id="config-audioOnly" checked={audioOnly} onChange={e => setAudioOnly(e.target.checked)} />
+        </div>
+        <div className="config-item">
+          <label htmlFor="config-muted">muted: </label>
+          <input type="checkbox" name="" id="config-muted" checked={muted} onChange={e => setMuted(e.target.checked)} />
+        </div>
       </div>
       <div id="stream-control-container">
         <button className="stream-btn" onClick={() => {
-          player.init({ width, height, className, controls, playsinline, objectFit, volumn });
+          player.init({ width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted });
         }}>init</button>
         <button className="stream-btn" onClick={() => player.release()}>release</button>
         <button className="stream-btn" onClick={async () => {
@@ -152,7 +163,7 @@ function StreamContainer() {
         <button className="stream-btn" onClick={() => player.muteVideo()}>muteVideo</button>
         <button className="stream-btn" onClick={() => player.unmuteVideo()}>unmuteVideo</button>
         <button className="stream-btn" onClick={() => {
-          player.setConfig({ width, height, className, controls, playsinline, objectFit, volumn });
+          player.setConfig({ width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted });
         }}>setConfig</button>
       </div>
     </div>
