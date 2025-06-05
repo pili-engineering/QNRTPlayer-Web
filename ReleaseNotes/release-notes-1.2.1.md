@@ -6,7 +6,22 @@
 ## 功能
 - 新增播放信息日志打点
 - config 新增自定义 uid 字段
+```javascript
+const player = new QNRTPlayer();
+// 如果没有在 init 中传入 uid 字段，那么 sdk 会内部生成一个随机的 uid
+const option = { ...otherOptions, uid: '自定义 id' };
+}
+player.init(option);
+```
 - QNRTPlayer 新增 getUID 方法
+```javascript
+const player = new QNRTPlayer();
+const uid = player.getUID();
+```
 
 ## 调整
 - getPlayerSupport 调整为异步方法，不会再有返回 undefined 的情况
+```javascript
+const player = new QNRTPlayer();
+const suppoort = await player.getPlayerSupport();
+```
