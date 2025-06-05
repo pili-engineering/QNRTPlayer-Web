@@ -17,11 +17,13 @@ body {
   display: grid;
   grid-template-columns: auto 36px 60px;
   align-items: center;
+  display:flex;
   font-weight: 700;
 }
 
 .header-label {
   margin-left: 6px;
+  flex-grow: 1;
 }
 
 .support-label {
