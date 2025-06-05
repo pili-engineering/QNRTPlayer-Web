@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-
 import './index.css';
-import { QNRTPlayer } from "qn-rtplayer-web";
+import { QNRTPlayer, SDKLogInfo, StatReport, SDKError, PlayerState } from "qn-rtplayer-web";
 
-QNRTPlayer.setLogLevel("debug");
+QNRTPlayer.setLogLevel("log");
 const player = new QNRTPlayer();
 
 // -1: unknow, 0: false, 1: true
 type SupportType = -1 | 0 | 1;
-
 function SupportLabel({ name, support }: { name: string; support: SupportType; }) {
   let supportClass = "";
   if (support === 1) {
@@ -20,13 +18,13 @@ function SupportLabel({ name, support }: { name: string; support: SupportType; }
   }
   return <div className={"support-label" + supportClass}>{name}</div>;
 }
-
 function Header() {
   const [rtcSupport, setRTCSupport] = React.useState<SupportType>(-1);
   const [h264Support, setH264Support] = React.useState<SupportType>(-1);
+  const [jitterBufferTargetSupport, setJitterBufferTargetSupport] = React.useState<SupportType>(-1);
   React.useEffect(() => {
-    const i = setInterval(() => {
-      const playerSupport = player.getPlayerSupport();
+    const i = setInterval(async () => {
+      const playerSupport = await player.getPlayerSupport();
       if (playerSupport) {
         clearInterval(i);
         if (playerSupport.peerConnection) {
@@ -39,6 +37,12 @@ function Header() {
         } else {
           setH264Support(0);
         }
+        if (playerSupport.jitterBufferTarget) {
+          setJitterBufferTargetSupport(1)
+        } else {
+          setJitterBufferTargetSupport(0)
+          // alert("不支持缓冲 buffer 时长设置")
+        }
       }
     }, 1000);
   }, []);
@@ -46,16 +50,20 @@ function Header() {
     <div className="header-label">Qiniu RTPlayer Demo</div>
     <SupportLabel name="RTC" support={rtcSupport} />
     <SupportLabel name="H264" support={h264Support} />
+    <SupportLabel name='jitterBuffer' support={jitterBufferTargetSupport} />
   </div>;
 }
-
 type ObjectFitType = "fill" | "contain" | "cover" | "none" | "scale-down";
 type VolumnType = 0 | 0.3 | 0.6 | 1;
 type MeidaContainerType = "media-container-1" | "media-container-2";
 
 function StreamContainer() {
   const storedUrl = localStorage.getItem('temp-url');
-  const [url, setUrl] = React.useState(storedUrl || "https://live-pilidemo.cloudvdn.com/pilidemo/timestamp.m3u8");
+  const [url, setUrl] = React.useState(storedUrl || "http://miku-play.qnsdk.com/sdk-live/test-yydounai.whep");
+  const [uid, setUid] = React.useState('test');
+  // const [url, setUrl] = React.useState(storedUrl || "https://pili-live-hls-cdn-prd.zhi-niao.com/zhiniao-prd/6436060_C1721361B7CB4EC89CD5B7F6EDAAE72A_0.m3u8");
+  const [jitterBuffer, setJitterBuffer] = React.useState(400);
+  const [enableJitterBuffer, setEnableJitterBuffer] = React.useState(false);
   const [width, setWidth] = React.useState<string>("100%");
   const [height, setHeight] = React.useState<string>("100%");
   const [className, setClassName] = React.useState<string>("qn-rtplayer-media");
@@ -68,16 +76,19 @@ function StreamContainer() {
   const [mediaContainer, setMediaContainer] = React.useState<MeidaContainerType>("media-container-1");
 
   React.useEffect(() => {
-    player.init({ width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted });
-    player.play(url, document.getElementById(mediaContainer) as HTMLElement)
-      .catch((e: any) => {
-        console.log("play fail", e)
-        setControls(true);
-        player.setConfig({ controls: true });
-      });
-  }, [])
+  setInterval(() => {
+    console.log("当前的 uid", player.getUID())
+  }, 1000)
+  player.on("error", async (data: SDKError) => {
+      console.log(`error: code: ${data.code}, errorType: ${data.errorType}, msg: ${data.msg}`);
+    });
+  }, [url])
 
   return <div id="stream-container">
+    <div id="stream-url-container">
+      <label htmlFor="stream-url-input" id="stream-url-label">uid：</label>
+      <input type="text" id="stream-url-input" value={uid} onChange={e => setUid(e.target.value)} />
+    </div>
     <div id="stream-url-container">
       <label htmlFor="stream-url-input" id="stream-url-label">播放地址：</label>
       <input type="text" id="stream-url-input" value={url} onChange={e => setUrl(e.target.value)} />
@@ -95,6 +106,10 @@ function StreamContainer() {
         <div className="config-item">
           <label htmlFor="config-class">className: </label>
           <input type="text" name="" id="config-class" value={className} onChange={e => setClassName(e.target.value)} />
+        </div>
+        <div className='config-item'>
+          <label htmlFor="config-jitterBuffer">jitterbuffer: </label>
+          <input type='number' name='' id="config-jitterBuffer" value={jitterBuffer} onChange={(e) => setJitterBuffer(Number(e.target.value))}/>
         </div>
         <div className="config-item">
           <label htmlFor="config-object-fit">object-fit: </label>
@@ -135,16 +150,26 @@ function StreamContainer() {
           <input type="checkbox" name="" id="config-audioOnly" checked={audioOnly} onChange={e => setAudioOnly(e.target.checked)} />
         </div>
         <div className="config-item">
+          <label htmlFor="config-enableJitterBuffer">enableJitterBuffer: </label>
+          <input type="checkbox" name="" id="config-enableJitterBuffer" checked={enableJitterBuffer} onChange={e => setEnableJitterBuffer(e.target.checked)} />
+        </div>
+        <div className="config-item">
           <label htmlFor="config-muted">muted: </label>
           <input type="checkbox" name="" id="config-muted" checked={muted} onChange={e => setMuted(e.target.checked)} />
         </div>
       </div>
       <div id="stream-control-container">
-        <button className="stream-btn" onClick={() => {
-          player.init({ width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted });
+        <button className="stream-btn" id="stream-btn-init" onClick={() => {
+          let option: any
+          if (enableJitterBuffer) {
+            option = { width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted, jitterBuffer, uid };
+          } else {
+            option = { width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted, uid };
+          }
+          player.init(option);
         }}>init</button>
-        <button className="stream-btn" onClick={() => player.release()}>release</button>
-        <button className="stream-btn" onClick={async () => {
+        <button className="stream-btn" id="stream-btn-release" onClick={() => player.release()}>release</button>
+        <button className="stream-btn" id="stream-btn-play" onClick={async () => {
           try {
             await player.play(url, document.getElementById(mediaContainer) as HTMLElement);
           } catch (e) {
@@ -155,13 +180,13 @@ function StreamContainer() {
             player.setConfig({ controls: true });
           }
         }}>play</button>
-        <button className="stream-btn" onClick={() => player.stop()}>stop</button>
-        <button className="stream-btn" onClick={() => player.pause()}>pause</button>
-        <button className="stream-btn" onClick={() => player.resume()}>resume</button>
-        <button className="stream-btn" onClick={() => player.muteAudio()}>muteAudio</button>
-        <button className="stream-btn" onClick={() => player.unmuteAudio()}>unmuteAudio</button>
-        <button className="stream-btn" onClick={() => player.muteVideo()}>muteVideo</button>
-        <button className="stream-btn" onClick={() => player.unmuteVideo()}>unmuteVideo</button>
+        <button className="stream-btn" id="stream-btn-stop" onClick={() => player.stop()}>stop</button>
+        <button className="stream-btn" id="stream-btn-pause" onClick={() => player.pause()}>pause</button>
+        <button className="stream-btn" id="stream-btn-resume" onClick={() => player.resume()}>resume</button>
+        <button className="stream-btn" id="stream-btn-muteAudio" onClick={() => player.muteAudio()}>muteAudio</button>
+        <button className="stream-btn" id="stream-btn-unmuteAudio" onClick={() => player.unmuteAudio()}>unmuteAudio</button>
+        <button className="stream-btn" id="stream-btn-muteVideo" onClick={() => player.muteVideo()}>muteVideo</button>
+        <button className="stream-btn" id="stream-btn-unmuteVideo" onClick={() => player.unmuteVideo()}>unmuteVideo</button>
         <button className="stream-btn" onClick={() => {
           player.setConfig({ width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted });
         }}>setConfig</button>
@@ -174,7 +199,7 @@ function StreamContainer() {
   </div>;
 }
 
-function LogContainer({ logs }: { logs: any[]; }) {
+function LogContainer({ logs }: { logs: SDKLogInfo[]; }) {
   const [top, setTop] = React.useState("100%");
   const toggleLog = () => {
     if (top === "100%") {
@@ -194,28 +219,22 @@ function LogContainer({ logs }: { logs: any[]; }) {
     </div>
   </>;
 }
-
-function LogItem({ logItem }: { logItem: any; }) {
+function LogItem({ logItem }: { logItem: SDKLogInfo; }) {
   return <div className="log-item">{`${logItem.time} [${logItem.level}] ${logItem.msg}`}</div>;
 }
-
 function App() {
-  const [logs, setLogs] = React.useState<any[]>([]);
-
+  const [logs, setLogs] = React.useState<SDKLogInfo[]>([]);
   useEffect(() => {
-    player.on("log", (logItem: any) => {
+    player.on("log", (logItem: SDKLogInfo) => {
       setLogs(cur => {
         return [...cur, logItem];
       });
     });
-    player.on("stats", (stats: any) => {
+    player.on("stats", (stats: StatReport) => {
       // ...
     });
-    player.on("error", (data: any) => {
-      alert(`error: code: ${data.code}, errorType: ${data.errorType}, msg: ${data.msg}`);
-    });
-    player.on("playerStateChanged", (data: any) => {
-      // ...
+    player.on("playerStateChanged", (data: PlayerState) => {
+      console.log('playerStateChanged state change', data)
     });
   }, []);
   return <>
@@ -224,7 +243,6 @@ function App() {
     <LogContainer logs={logs} />
   </>;
 }
-
 ReactDOM.render(
   <App />,
   document.getElementById('root')
