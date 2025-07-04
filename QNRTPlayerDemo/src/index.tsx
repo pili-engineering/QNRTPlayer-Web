@@ -76,18 +76,44 @@ function StreamContainer() {
   const [mediaContainer, setMediaContainer] = React.useState<MeidaContainerType>("media-container-1");
 
   React.useEffect(() => {
+    // let option: object
+    // if (enableJitterBuffer) {
+    //   option = { width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted, jitterBuffer }
+    // } else {
+    //   option = { width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted }
+    // }
   setInterval(() => {
     console.log("当前的 uid", player.getUID())
   }, 1000)
   player.on("error", async (data: SDKError) => {
       console.log(`error: code: ${data.code}, errorType: ${data.errorType}, msg: ${data.msg}`);
+      // player.release();
+      // let option: any
+      // if (enableJitterBuffer) {
+      //   option = { width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted, jitterBuffer, uid: 'test' };
+      // } else {
+      //   option = { width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted, uid: 'test' };
+      // }
+      // player.init(option);
+      // try {
+      //   await player.play(url, document.getElementById(mediaContainer) as HTMLElement);
+      // } catch (e) {
+      //   // 处理播放失败的情况，弹出 UI，用户点击后播放
+      //   // 这里是利用浏览器 controls 来实现，也可以自己创建 UI，用户点击后执行 player.resume() 方法
+      //   console.log("play fail", e)
+      //   setControls(true);
+      //   player.setConfig({ controls: true });
+      // }
     });
+    // return () => {
+    //   player.off('error')
+    // }
   }, [url])
 
   return <div id="stream-container">
     <div id="stream-url-container">
-      <label htmlFor="stream-url-input" id="stream-url-label">uid：</label>
-      <input type="text" id="stream-url-input" value={uid} onChange={e => setUid(e.target.value)} />
+      <label htmlFor="stream-url-input2" id="stream-url-label">uid：</label>
+      <input type="text" id="stream-url-inpu2" value={uid} onChange={e => setUid(e.target.value)} />
     </div>
     <div id="stream-url-container">
       <label htmlFor="stream-url-input" id="stream-url-label">播放地址：</label>
