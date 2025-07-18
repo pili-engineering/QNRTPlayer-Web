@@ -59,7 +59,7 @@ type MeidaContainerType = "media-container-1" | "media-container-2";
 
 function StreamContainer() {
   const storedUrl = localStorage.getItem('temp-url');
-  const [url, setUrl] = React.useState(storedUrl || "http://miku-play.qnsdk.com/sdk-live/test-yydounai.whep");
+  const [url, setUrl] = React.useState(storedUrl || "https://live-mikudemo.cloudvdn.com/mikudemo/timestamps.whep");
   const [uid, setUid] = React.useState('test');
   // const [url, setUrl] = React.useState(storedUrl || "https://pili-live-hls-cdn-prd.zhi-niao.com/zhiniao-prd/6436060_C1721361B7CB4EC89CD5B7F6EDAAE72A_0.m3u8");
   const [jitterBuffer, setJitterBuffer] = React.useState(400);
@@ -70,6 +70,7 @@ function StreamContainer() {
   const [controls, setControls] = React.useState<boolean>(false);
   const [audioOnly, setAudioOnly] = React.useState<boolean>(false);
   const [muted, setMuted] = React.useState<boolean>(false);
+  const [videoContainer, setVideoContainer] = React.useState<boolean>(true);
   const [playsinline, setPlaysinline] = React.useState<boolean>(true);
   const [objectFit, setObjectFit] = React.useState<ObjectFitType>("contain");
   const [volumn, setVolumn] = React.useState<VolumnType>(0);
@@ -82,9 +83,6 @@ function StreamContainer() {
     // } else {
     //   option = { width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted }
     // }
-  setInterval(() => {
-    console.log("当前的 uid", player.getUID())
-  }, 1000)
   player.on("error", async (data: SDKError) => {
       console.log(`error: code: ${data.code}, errorType: ${data.errorType}, msg: ${data.msg}`);
       // player.release();
@@ -164,6 +162,10 @@ function StreamContainer() {
           </select>
         </div>
         <div className="config-item">
+          <label htmlFor="config-controls">videoContainer: </label>
+          <input type="checkbox" name="" id="config-videoContainer" checked={videoContainer} onChange={e => setVideoContainer(e.target.checked)} />
+        </div>
+        <div className="config-item">
           <label htmlFor="config-controls">controls: </label>
           <input type="checkbox" name="" id="config-controls" checked={controls} onChange={e => setControls(e.target.checked)} />
         </div>
@@ -218,10 +220,15 @@ function StreamContainer() {
         }}>setConfig</button>
       </div>
     </div>
-    <div className="stream-content-container">
+    {videoContainer && <div className="stream-content-container">
+      <video data-v="container-1" id="media-container-1" className="media-container"></video>
+      <video data-v="container-2" id="media-container-2" className="media-container"></video>
+    </div>}
+
+    {!videoContainer && <div className="stream-content-container">
       <div data-v="container-1" id="media-container-1" className="media-container"></div>
       <div data-v="container-2" id="media-container-2" className="media-container"></div>
-    </div>
+    </div>}
   </div>;
 }
 

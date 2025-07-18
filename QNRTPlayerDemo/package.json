@@ -1,6 +1,6 @@
 {
   "name": "demo",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "七牛实时直播播放器 demo",
   "author": "yao <yaoyaox023@gmail.com>",
   "homepage": "",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.12.5",
-    "qn-rtplayer-web": "1.2.4",
+    "qn-rtplayer-web": "1.2.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },

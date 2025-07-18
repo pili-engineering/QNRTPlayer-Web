@@ -4969,10 +4969,10 @@ q@^1.1.2:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==
 
-qn-rtplayer-web@1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/qn-rtplayer-web/-/qn-rtplayer-web-1.2.4.tgz#cf35dc4412a95abe445de9e6cebf99b4025a8e49"
-  integrity sha512-ioz3pTqB6UEr9vIOAvqh2KGH6VYA9hc+hqAaWMnsYdPyoCF75fFO/Hz2LrYFJzurEwaR81hkAQ/TvTUwlb7c7Q==
+qn-rtplayer-web@1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/qn-rtplayer-web/-/qn-rtplayer-web-1.2.5.tgz#1eed7c7166e8637a9ebf3396b9dd104a7bea6988"
+  integrity sha512-0ODkQ7Ny56Zu3Tn38SoIMbnIRnNGnm8xUlbbzq+9xnp9UtsovB4N/+zpMgyAAYUe0XCjBUHm6RoAmwRX5S2QgQ==
   dependencies:
     "@fingerprintjs/fingerprintjs" "^4.6.1"
     blueimp-md5 "^2.19.0"
