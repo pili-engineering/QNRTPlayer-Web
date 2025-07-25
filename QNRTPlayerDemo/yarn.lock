@@ -4969,10 +4969,10 @@ q@^1.1.2:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==
 
-qn-rtplayer-web@1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/qn-rtplayer-web/-/qn-rtplayer-web-1.2.5.tgz#1eed7c7166e8637a9ebf3396b9dd104a7bea6988"
-  integrity sha512-0ODkQ7Ny56Zu3Tn38SoIMbnIRnNGnm8xUlbbzq+9xnp9UtsovB4N/+zpMgyAAYUe0XCjBUHm6RoAmwRX5S2QgQ==
+qn-rtplayer-web@1.2.6:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/qn-rtplayer-web/-/qn-rtplayer-web-1.2.6.tgz#aa78a254d02e5f2b4aa094b1f7546f0dfd4bdf60"
+  integrity sha512-K5xU/BDH+9IwXeLH6tBM9nwZ3vCQT58xZkMDh7IyP876n+xmLmxbCPJenGyrCFb4MATru59bKaIuXxlhfWt8Iw==
   dependencies:
     "@fingerprintjs/fingerprintjs" "^4.6.1"
     blueimp-md5 "^2.19.0"
@@ -4981,6 +4981,7 @@ qn-rtplayer-web@1.2.5:
     fingerprintjs2 "^2.1.4"
     mobile-device-detect "^0.4.3"
     pako "^2.1.0"
+    sdp-transform "^2.15.0"
     ua-parser-js "^1.0.37"
     webrtc-adapter "^7.7.0"
 
@@ -5368,6 +5369,11 @@ schema-utils@^4.3.0, schema-utils@^4.3.2:
     ajv "^8.9.0"
     ajv-formats "^2.1.1"
     ajv-keywords "^5.1.0"
+
+sdp-transform@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/sdp-transform/-/sdp-transform-2.15.0.tgz#79d37a2481916f36a0534e07b32ceaa87f71df42"
+  integrity sha512-KrOH82c/W+GYQ0LHqtr3caRpM3ITglq3ljGUIb8LTki7ByacJZ9z+piSGiwZDsRyhQbYBOBJgr2k6X4BZXi3Kw==
 
 sdp@^2.12.0, sdp@^2.6.0:
   version "2.12.0"

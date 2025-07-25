@@ -50,7 +50,7 @@ function Header() {
     <div className="header-label">Qiniu RTPlayer Demo</div>
     <SupportLabel name="RTC" support={rtcSupport} />
     <SupportLabel name="H264" support={h264Support} />
-    <SupportLabel name='jitterBuffer' support={jitterBufferTargetSupport} />
+    {/* <SupportLabel name='jitterBuffer' support={jitterBufferTargetSupport} /> */}
   </div>;
 }
 type ObjectFitType = "fill" | "contain" | "cover" | "none" | "scale-down";
@@ -83,6 +83,11 @@ function StreamContainer() {
     // } else {
     //   option = { width, height, className, controls, playsinline, objectFit, volumn, audioOnly, muted }
     // }
+  // setInterval(() => {
+  //   console.log("当前的 uid", player.getUID())
+  // }, 1000)
+  // player.on("wait", async (data: number) => {
+  // })
   player.on("error", async (data: SDKError) => {
       console.log(`error: code: ${data.code}, errorType: ${data.errorType}, msg: ${data.msg}`);
       // player.release();
@@ -131,10 +136,10 @@ function StreamContainer() {
           <label htmlFor="config-class">className: </label>
           <input type="text" name="" id="config-class" value={className} onChange={e => setClassName(e.target.value)} />
         </div>
-        <div className='config-item'>
+        {/* <div className='config-item'>
           <label htmlFor="config-jitterBuffer">jitterbuffer: </label>
           <input type='number' name='' id="config-jitterBuffer" value={jitterBuffer} onChange={(e) => setJitterBuffer(Number(e.target.value))}/>
-        </div>
+        </div> */}
         <div className="config-item">
           <label htmlFor="config-object-fit">object-fit: </label>
           <select name="" id="config-object-fit" value={objectFit} onChange={e => setObjectFit(e.target.value as ObjectFitType)}>
@@ -177,10 +182,10 @@ function StreamContainer() {
           <label htmlFor="config-audioOnly">audioOnly: </label>
           <input type="checkbox" name="" id="config-audioOnly" checked={audioOnly} onChange={e => setAudioOnly(e.target.checked)} />
         </div>
-        <div className="config-item">
+        {/* <div className="config-item">
           <label htmlFor="config-enableJitterBuffer">enableJitterBuffer: </label>
           <input type="checkbox" name="" id="config-enableJitterBuffer" checked={enableJitterBuffer} onChange={e => setEnableJitterBuffer(e.target.checked)} />
-        </div>
+        </div> */}
         <div className="config-item">
           <label htmlFor="config-muted">muted: </label>
           <input type="checkbox" name="" id="config-muted" checked={muted} onChange={e => setMuted(e.target.checked)} />
