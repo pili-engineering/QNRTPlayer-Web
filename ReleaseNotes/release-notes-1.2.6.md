@@ -7,4 +7,4 @@
 - 优化弱网下视频重传效率
 
 ## 调整
-- config 取消 jitterBuffer 配置，更由服务端配置缓冲大小
+- 取消客户端 jitterBuffer 配置，更由服务云端统一调整 jitterBuffer 配置
